@@ -34,7 +34,7 @@ app.post("/posts", async (req, res) => {
 
     res.status(201).send(posts[id]);
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
   }
 });
 
