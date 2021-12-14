@@ -12,7 +12,6 @@ export default function PostCreate() {
       });
 
       setTitle("");
-      console.log(res.data);
     } catch (error) {
       console.log(error);
     }

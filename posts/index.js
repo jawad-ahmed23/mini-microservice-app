@@ -1,6 +1,7 @@
 const express = require("express");
 const { randomBytes } = require("crypto");
 const cors = require("cors");
+const axios = require("axios");
 
 const app = express();
 
@@ -13,16 +14,34 @@ app.get("/posts", (req, res) => {
   res.send(posts);
 });
 
-app.post("/posts", (req, res) => {
-  const { title } = req.body;
-  const id = randomBytes(4).toString("hex");
+app.post("/posts", async (req, res) => {
+  try {
+    const { title } = req.body;
+    const id = randomBytes(4).toString("hex");
 
-  posts[id] = {
-    id,
-    title,
-  };
+    posts[id] = {
+      id,
+      title,
+    };
 
-  res.status(201).send(posts[id]);
+    await axios.post("http://localhost:5000/events", {
+      type: "POST_CREATED",
+      data: {
+        id,
+        title,
+      },
+    });
+
+    res.status(201).send(posts[id]);
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
+app.post("/events", (req, res) => {
+  console.log(req.body.type);
+
+  res.send({});
 });
 
 const PORT = 4001 || process.env.PORT;
